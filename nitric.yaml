@@ -1,2 +1,4 @@
 name: mega-test
-services: []
+services:
+  - match: ./services/*.ts
+    start: yarn dev:function %s
