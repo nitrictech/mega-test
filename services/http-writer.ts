@@ -1,14 +1,18 @@
 import r from "../resources";
 
+import express from "express";
+import { http } from "@nitric/sdk";
+
 const bucket = r.bucket.for('writing');
 const topic = r.topic.for('publishing');
 const kv = r.kv.for('setting');
 const queue = r.queue.for('sending');
-// const queue = r.queue.for('sending');
 
-r.api.put("/everything/:value", async (ctx) => {
-    console.log("got everything request");
-    const { value } = ctx.req.params;
+const app = express();
+
+app.get("/:value", async (req, res) => {
+    const value = req.params.value;
+
     console.log('writing to bucket');
     await bucket.file(value).write(value);
     console.log('setting kv');
@@ -18,8 +22,7 @@ r.api.put("/everything/:value", async (ctx) => {
     console.log('publishing to topic');
     await queue.send({value});
 
-    
-    ctx.res.body = `Hello ${value}`;
-
-    return ctx;
+    res.send(`Hello ${value}`);
 });
+
+http(app);
