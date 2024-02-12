@@ -1,4 +1,4 @@
 name: mega-test
 services:
   - match: ./services/*.ts
-    start: yarn dev:function %s
+    start: yarn dev:function $SERVICE_PATH
